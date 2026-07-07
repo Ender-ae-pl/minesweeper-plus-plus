@@ -14,18 +14,19 @@ int main()
     InitWindow(screenWidth, screenHeight, "TEMPLATE");
     SetTargetFPS(60);
     
-    Board bord(10,10,10);
+    Board bord(10,10,10,30,4); //width, height, mines, cellSize, spaceBetwen
     bord.generate(0,0,{});
     bord.print();
-
+    
     while (!WindowShouldClose())
     {
         // Update
-
-
+        
+        
         BeginDrawing();
-            ClearBackground(backgroundColor);
+        ClearBackground(backgroundColor);
             // Draw
+            bord.draw(screenWidth, screenHeight);
 
         EndDrawing();
     }
