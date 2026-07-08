@@ -5,16 +5,16 @@
 #include "ui.hpp"
 #include "board.hpp"
 
-Color backgroundColor = WHITE;
-int screenWidth = 800;
-int screenHeight = 600;
+Color backgroundColor = BLACK;
+int screenWidth = 1000;
+int screenHeight = 1000;
 
 int main() 
 {
     InitWindow(screenWidth, screenHeight, "TEMPLATE");
     SetTargetFPS(60);
     
-    Board bord(10,10,10,30,4); //width, height, mines, cellSize, spaceBetwen
+    Board bord(10,10,10); //width, height, mines
     bord.generate(0,0,{});
     bord.print();
     

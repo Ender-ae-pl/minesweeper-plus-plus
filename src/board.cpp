@@ -9,11 +9,11 @@
 
 using namespace std;
 
-Board::Board(int width, int height, int mines, int cellSize, int spaceBetwen):width(width),height(height),mines(mines),cellSize(cellSize),spaceBetwen(spaceBetwen){};
+Board::Board(int width, int height, int mines):width(width),height(height),mines(mines){};
 
 void Board::generate(int x, int y, map<string,int> props){
     Random rng;
-    board = vector<vector<tile>>(width,vector<tile>(height));
+    board = vector<vector<tile>>(width,vector<tile>(height,tile(0,0)));
     int rmines = mines;
     if (mines>width*height-9){return;}
     while (rmines>0){
@@ -24,6 +24,17 @@ void Board::generate(int x, int y, map<string,int> props){
             rmines-=1;
         }
     }
+    //min. scale
+    if (GetScreenWidth()/width*height>GetScreenHeight()) minscale = GetScreenWidth()/width/cellSize;
+    else minscale = GetScreenHeight()/height/cellSize;
+
+    scale = minscale;
+    //update tiles
+    for (int i=0;i<width;i++) for (int j=0;j<height;j++){
+        board[i][j].posx=i;
+        board[i][j].posy=j;
+    }
+
 }
 
 void Board::print(){
@@ -36,13 +47,10 @@ void Board::print(){
 }
 
 void Board::draw(int screenWidth, int screenHeight){
-    int BordSizeX = (width * cellSize) + spaceBetwen * (width - 1);
-    int BordSizeY = (height * cellSize) + spaceBetwen * (height - 1);
-    Color color;
-    
+    int screenx=screenPos.x;
+    int screeny=screenPos.y;
+
     for (int w=0;w<width;w++) for (int h=0;h<height;h++){
-        if(board[w][h].isMine) color = RED;
-        else color=BLUE;
-        DrawRectangle(w * (cellSize + spaceBetwen) + (screenWidth/2 - BordSizeX/2), h * (cellSize + spaceBetwen) + (screenHeight/2 - BordSizeY/2), cellSize - spaceBetwen, cellSize - spaceBetwen, color);
+        board[w][h].draw(cellSize,spaceBetwen,scale,screenx,screeny);
     }
 }
