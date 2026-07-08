@@ -9,18 +9,18 @@
 using namespace std;
 
 class Board {
-    public:
-        int width;
-        int height;
-        int mines;
-        vector<vector<tile>> board;
+    int width;
+    int height;
+    int mines;
+    int cellSize;
+    int spaceBetwen;
+    vector<vector<tile>> board;
+    
 
-        Board(int width, int height, int mines);
-        
+    public:
+        Board(int width, int height, int mines, int cellSize, int spaceBetwen);
         void generate(int x, int y, map<string,int> props={});
 
-
-
-
         void print();
+        void draw(int screenWidth, int screenHeight);
 };
