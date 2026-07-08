@@ -24,10 +24,10 @@ void Board::generate(int x, int y, map<string,int> props){
             rmines-=1;
         }
     }
-    //min. scale
-    if (GetScreenWidth()/width*height>GetScreenHeight()) minscale = GetScreenWidth()/width/cellSize;
-    else minscale = GetScreenHeight()/height/cellSize;
 
+    //min. scale
+    if ((float)GetScreenWidth()/width*height>=GetScreenHeight()) minscale = (float)GetScreenWidth()/width/cellSize;
+    else minscale = (float)GetScreenHeight()/height/cellSize;
     scale = minscale;
     //update tiles
     for (int i=0;i<width;i++) for (int j=0;j<height;j++){
