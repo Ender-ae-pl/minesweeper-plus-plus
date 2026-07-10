@@ -4,29 +4,32 @@
 
 #include "ui.hpp"
 #include "board.hpp"
+#include "game.hpp"
 
 Color backgroundColor = BLACK;
 int screenWidth = 1000;
 int screenHeight = 1000;
 
-int main() 
+int main()
 {
     InitWindow(screenWidth, screenHeight, "TEMPLATE");
     SetTargetFPS(60);
-    
-    Board bord(10,10,10); //width, height, mines
-    bord.generate(0,0,{});
-    bord.print();
+
+    Game game = Game();
+    game.print();
     
     while (!WindowShouldClose())
     {
+        //Input
+        game.input();
+
         // Update
-        
+        game.updateAll();
         
         BeginDrawing();
         ClearBackground(backgroundColor);
             // Draw
-            bord.draw(screenWidth, screenHeight);
+            game.drawAll();
 
         EndDrawing();
     }
