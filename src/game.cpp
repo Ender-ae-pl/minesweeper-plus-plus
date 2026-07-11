@@ -4,7 +4,7 @@
 #include "board.hpp"
 
 Game::Game()
-:board(15, 20, 1) //width, height, mines
+:board(15, 20, 10) //width, height, mines
 {
     board.generate(0,0,{});
     //ui = Ui();
@@ -22,19 +22,19 @@ void Game::input()
     }
 
     if(IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)){
-        
+        board.move_up();
     }
 
     if(IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)){
-        
+        board.move_down();
     }
 
     if(IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)){
-        
+        board.move_left();
     }
 
     if(IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)){
-        
+        board.move_right();
     }
 }
 

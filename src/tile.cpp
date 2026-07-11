@@ -17,8 +17,11 @@ tile::tile(int posx, int posy, int minesArround , Color color, bool isOpen){
 
 void tile::open()
 {
-    color = WHITE;
-    isOpen = true;
+    if(isMine) CloseWindow();
+    else {
+        color = WHITE;
+        isOpen = true;
+    }
 }
 
 void tile::flag()
@@ -39,6 +42,6 @@ void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int scr
     DrawRectangleRec(block, color);
     if(isOpen){
         float fontSize = 35;
-        DrawText("1" , block.x + (block.width - MeasureText("1", fontSize))/2, block.y + (block.height - fontSize)/2, fontSize, BLACK);
+        DrawText(TextFormat("%i", minesArround) , block.x + (block.width - MeasureText(TextFormat("%i", minesArround), fontSize))/2, block.y + (block.height - fontSize)/2, fontSize, BLACK);
     }
 }

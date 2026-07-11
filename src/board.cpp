@@ -11,6 +11,7 @@ using namespace std;
 
 Board::Board(int width, int height, int mines):width(width),height(height),mines(mines){};
 
+
 void Board::generate(int x, int y, map<string,int> props){
     Random rng;
     board = vector<vector<tile>>(width,vector<tile>(height,tile(0,0)));
@@ -22,6 +23,19 @@ void Board::generate(int x, int y, map<string,int> props){
         if (board[rx][ry].isMine==false && abs(rx-x)>1 && abs(ry-y)>1){
             board[rx][ry].isMine = true;
             board[rx][ry].color = RED;
+            //incrase minesArround counter other blocks
+            if(rx>0){
+                board[rx-1][ry].minesArround++;
+                if(ry>0) board[rx-1][ry-1].minesArround++; 
+                if(ry<board.size()-1) board[rx-1][ry+1].minesArround++;
+            }
+            if(rx<board.size()-1){
+                board[rx+1][ry].minesArround++;
+                if(ry>0) board[rx+1][ry-1].minesArround++; 
+                if(ry<board.size()-1) board[rx+1][ry+1].minesArround++;
+            }
+            if(ry>0) board[rx][ry-1].minesArround++;
+            if(ry<board.size()-1) board[rx][ry+1].minesArround++;
             rmines-=1;
         }
     }
@@ -34,9 +48,28 @@ void Board::generate(int x, int y, map<string,int> props){
     for (int i=0;i<width;i++) for (int j=0;j<height;j++){
         board[i][j].posx=i;
         board[i][j].posy=j;
-        //board[i][j].howManyMinesArround();
     }
 
+}
+
+void Board::move_left()
+{
+    return;
+}
+
+void Board::move_right()
+{
+    return;
+}
+
+void Board::move_up()
+{
+    return;
+}
+
+void Board::move_down()
+{
+    return;
 }
 
 void Board::assign()

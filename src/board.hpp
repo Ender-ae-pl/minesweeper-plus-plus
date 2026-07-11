@@ -24,6 +24,11 @@ class Board {
         Board(int width, int height, int mines);
         void generate(int x, int y, map<string,int> props={});
 
+        void move_left();
+        void move_right();
+        void move_up();
+        void move_down();
+
         void assign();
         void print();
         void draw();
