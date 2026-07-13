@@ -21,7 +21,7 @@ public:
 
     tile(int posx,int posy, int minesArround = 0, Color color=BLUE, bool isOpen = false);
 
-    void open();
+    bool open();
     void flag();
     void assignRect(int cellSize, int spaceBetwen, float scale,int screenx,int screenys);
     void draw(int cellSize, int spaceBetwen, float scale,int screenx,int screenys);

@@ -15,13 +15,10 @@ tile::tile(int posx, int posy, int minesArround , Color color, bool isOpen){
     isMine=false;
 }
 
-void tile::open()
+bool tile::open()
 {
-    if(isMine) CloseWindow();
-    else {
-        color = WHITE;
-        isOpen = true;
-    }
+    if(isMine) return true;
+    else return false;
 }
 
 void tile::flag()

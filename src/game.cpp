@@ -8,6 +8,21 @@ Game::Game()
 {
     board.generate(0,0,{});
     //ui = Ui();
+
+    InitAudioDevice();
+    explosion = LoadSound("Sounds/explosion.mp3");
+    backMusic1 = LoadMusicStream("Sounds/wietnam.mp3");
+    backMusic2 = LoadMusicStream("Sounds/tetris.mp3");
+    backMusic3 = LoadMusicStream("Sounds/zsrr.mp3");
+}
+
+Game::~Game()
+{
+    UnloadMusicStream(backMusic1);
+    UnloadMusicStream(backMusic2);
+    UnloadMusicStream(backMusic3);
+    UnloadSound(explosion);
+    CloseAudioDevice();
 }
 
 void Game::input()
@@ -17,7 +32,16 @@ void Game::input()
     Vector2 mouse = GetMousePosition();
 
     for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
-        if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) board.board[w][h].open();
+        if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+            if(board.board[w][h].open()) {
+                PlaySound(explosion);
+                WaitTime(2);
+                CloseWindow();
+            } else {
+                board.board[w][h].color = WHITE;
+                board.board[w][h].isOpen = true;
+            }
+        }
         if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) board.board[w][h].flag();
     }
 
