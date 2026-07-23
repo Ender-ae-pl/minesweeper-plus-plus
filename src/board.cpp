@@ -11,6 +11,7 @@ using namespace std;
 
 Board::Board(int width, int height, int mines):width(width),height(height),mines(mines){};
 
+
 void Board::generate(int x, int y, map<string,int> props){
     Random rng;
     board = vector<vector<tile>>(width,vector<tile>(height,tile(0,0)));
@@ -21,6 +22,20 @@ void Board::generate(int x, int y, map<string,int> props){
         int ry = rng.RandInt(0,height-1);
         if (board[rx][ry].isMine==false && abs(rx-x)>1 && abs(ry-y)>1){
             board[rx][ry].isMine = true;
+            board[rx][ry].color = RED;
+            //incrase minesArround counter other blocks
+            if(rx>0){
+                board[rx-1][ry].minesArround++;
+                if(ry>0) board[rx-1][ry-1].minesArround++; 
+                if(ry<board.size()-1) board[rx-1][ry+1].minesArround++;
+            }
+            if(rx<board.size()-1){
+                board[rx+1][ry].minesArround++;
+                if(ry>0) board[rx+1][ry-1].minesArround++; 
+                if(ry<board.size()-1) board[rx+1][ry+1].minesArround++;
+            }
+            if(ry>0) board[rx][ry-1].minesArround++;
+            if(ry<board.size()-1) board[rx][ry+1].minesArround++;
             rmines-=1;
         }
     }
@@ -37,7 +52,38 @@ void Board::generate(int x, int y, map<string,int> props){
 
 }
 
-void Board::print(){
+void Board::move_left()
+{
+    return;
+}
+
+void Board::move_right()
+{
+    return;
+}
+
+void Board::move_up()
+{
+    return;
+}
+
+void Board::move_down()
+{
+    return;
+}
+
+void Board::assign()
+{
+    int screenx=screenPos.x;
+    int screeny=screenPos.y;
+
+    for (int w=0;w<width;w++) for (int h=0;h<height;h++){
+        board[w][h].assignRect(cellSize,spaceBetwen,scale,screenx,screeny);
+    }
+}
+
+void Board::print()
+{
     for (int i=0;i<width;i++){
         for (int j=0;j<height;j++){
             cout<<board[i][j].isMine<<" ";
@@ -46,7 +92,7 @@ void Board::print(){
     }
 }
 
-void Board::draw(int screenWidth, int screenHeight){
+void Board::draw(){
     int screenx=screenPos.x;
     int screeny=screenPos.y;
 

@@ -1,0 +1,23 @@
+#include "board.hpp"
+#include "ui.hpp"
+
+class Game
+{
+    Sound explosion;
+    Board board;
+    //Ui ui
+    
+    public:
+        Music backMusic1;
+        Music backMusic2;
+        Music backMusic3;
+        
+        Game();
+        ~Game();
+        
+        void input();
+
+        void drawAll();
+        void updateAll();
+        void print();
+};
