@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <functional>
+
 #include "tile.hpp"
 
 
@@ -24,6 +26,7 @@ class Board {
         Board(int width, int height, int mines);
         void generate(int x, int y, map<string,int> props={});
 
+        int ApplyToAdjacent(tile* CenterTile, std::function<int(tile*)> f);
         void move_left();
         void move_right();
         void move_up();

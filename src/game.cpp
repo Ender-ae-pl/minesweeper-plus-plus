@@ -2,6 +2,7 @@
 
 #include "game.hpp"
 #include "board.hpp"
+#include "tile.hpp"
 
 Game::Game()
 :board(15, 20, 10) //width, height, mines
@@ -31,19 +32,29 @@ void Game::input()
 
     Vector2 mouse = GetMousePosition();
 
-    for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
-        if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-            if(board.board[w][h].open()) {
-                PlaySound(explosion);
-                WaitTime(2);
-                CloseWindow();
-            } else {
-                board.board[w][h].color = WHITE;
-                board.board[w][h].isOpen = true;
+    //left click
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+        for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
+            if(CheckCollisionPointRec(mouse, board.board[w][h].block)){
+                tile* clickedTile = &board.board[w][h];
+                if(clickedTile->isOpen || clickedTile->isFlagged){continue;}
+
+                clickedTile->open();
+
+                if(clickedTile->isMine) {
+                    PlaySound(explosion);
+                    WaitTime(2);
+                    CloseWindow();
+                }
             }
         }
+    }
+
+    //right click
+    for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
         if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) board.board[w][h].flag();
     }
+
 
     if(IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)){
         board.move_up();

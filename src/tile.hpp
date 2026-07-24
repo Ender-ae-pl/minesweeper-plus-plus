@@ -9,17 +9,18 @@ class Board;
 
 class tile {
 public:
-    bool state;
     Rectangle block;
     bool isMine;
     bool isOpen;
+    bool isFlagged;
     int minesArround;
     int adjminesnormal;
     int posx; int posy;
     Board* boardptr;
-    Color color;
 
-    tile(int posx,int posy, int minesArround = 0, Color color=BLUE, bool isOpen = false);
+    Color color=LIGHTGRAY;
+
+    tile(int posx,int posy);
 
     bool open();
     void flag();

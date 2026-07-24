@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <functional>
 
 #include "board.hpp"
 #include "Random.hpp"
@@ -12,9 +13,30 @@ using namespace std;
 Board::Board(int width, int height, int mines):width(width),height(height),mines(mines){};
 
 
+int Board::ApplyToAdjacent(tile* CenterTile, std::function<int(tile*)> f){
+    int count=0;
+    int x=CenterTile->posx;
+    int y=CenterTile->posy;
+    for(int dx=-1;dx<2;dx++) for(int dy=-1;dy<2;dy++) {
+        if(x+dx<0||y+dy<0||x+dx>=width||y+dy>=height){continue;}
+        if(dx==0&&dy==0){continue;}
+        count+=f(&board[x+dx][y+dy]);
+    }
+
+    return count;
+}
+
 void Board::generate(int x, int y, map<string,int> props){
     Random rng;
     board = vector<vector<tile>>(width,vector<tile>(height,tile(0,0)));
+    //update tile position
+    for (int i=0;i<width;i++) for (int j=0;j<height;j++){
+        board[i][j].posx=i;
+        board[i][j].posy=j;
+        board[i][j].boardptr=this;
+    }
+
+    
     int rmines = mines;
     if (mines>width*height-9){return;}
     while (rmines>0){
@@ -24,18 +46,11 @@ void Board::generate(int x, int y, map<string,int> props){
             board[rx][ry].isMine = true;
             board[rx][ry].color = RED;
             //incrase minesArround counter other blocks
-            if(rx>0){
-                board[rx-1][ry].minesArround++;
-                if(ry>0) board[rx-1][ry-1].minesArround++; 
-                if(ry<board.size()-1) board[rx-1][ry+1].minesArround++;
-            }
-            if(rx<board.size()-1){
-                board[rx+1][ry].minesArround++;
-                if(ry>0) board[rx+1][ry-1].minesArround++; 
-                if(ry<board.size()-1) board[rx+1][ry+1].minesArround++;
-            }
-            if(ry>0) board[rx][ry-1].minesArround++;
-            if(ry<board.size()-1) board[rx][ry+1].minesArround++;
+            ApplyToAdjacent(&board[rx][ry], [](tile* t){
+                t->minesArround++;
+                return 0;
+            });
+
             rmines-=1;
         }
     }
@@ -44,13 +59,12 @@ void Board::generate(int x, int y, map<string,int> props){
     if ((float)GetScreenWidth()/width*height>=GetScreenHeight()) minscale = (float)GetScreenWidth()/width/cellSize;
     else minscale = (float)GetScreenHeight()/height/cellSize;
     scale = minscale;
-    //update tiles
-    for (int i=0;i<width;i++) for (int j=0;j<height;j++){
-        board[i][j].posx=i;
-        board[i][j].posy=j;
-    }
+
 
 }
+
+
+
 
 void Board::move_left()
 {
@@ -84,8 +98,8 @@ void Board::assign()
 
 void Board::print()
 {
-    for (int i=0;i<width;i++){
-        for (int j=0;j<height;j++){
+    for (int j=0;j<height;j++){
+        for (int i=0;i<width;i++){
             cout<<board[i][j].isMine<<" ";
         }
         cout<<endl;

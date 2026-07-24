@@ -6,24 +6,41 @@
 #include "board.hpp"
 #include "tile.hpp"
 
-tile::tile(int posx, int posy, int minesArround , Color color, bool isOpen){
+tile::tile(int posx, int posy){
     this->posx=posx;
     this->posy=posy;
-    this->color = BLUE;
     this->minesArround = 0;
     this->isOpen = false;
     isMine=false;
+    isFlagged=false;
 }
 
 bool tile::open()
 {
-    if(isMine) return true;
-    else return false;
+    if (isOpen) return false;
+    isOpen = true;
+    if (isMine){
+        return true;
+    }
+    
+    if (minesArround==0){
+        boardptr->ApplyToAdjacent(this,[](tile* t){
+            t->open();
+            return 0;
+        });
+    }
+
+    return false;
 }
 
 void tile::flag()
 {
-    return;
+    if(!isOpen){
+    isFlagged=true;
+    }
+    if(isFlagged){
+    isFlagged=false;
+    }
 }
 
 void tile::assignRect(int cellSize, int spaceBetwen, float scale, int screenx, int screeny)
@@ -33,12 +50,18 @@ void tile::assignRect(int cellSize, int spaceBetwen, float scale, int screenx, i
 
 void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int screeny)
 {
-    Color color2 = GRAY;
-
-    DrawRectangleRec({scale *  (posx * cellSize)  -screenx,scale *  (posy * cellSize)  -screeny, (cellSize)*scale, (cellSize)*scale},color2);
-    DrawRectangleRec(block, color);
+    Color colorBorder = GRAY;
+    Color colorClosed = {167,167,167,255};
+    
+    //lines (bigger squares)
+    DrawRectangle(scale *  (posx * cellSize)  -screenx,scale *  (posy * cellSize)  -screeny, (cellSize)*scale, (cellSize)*scale,colorBorder);
+    
     if(isOpen){
+        DrawRectangleRec(block, color);
         float fontSize = 35;
+        if(minesArround==0){return;}
         DrawText(TextFormat("%i", minesArround) , block.x + (block.width - MeasureText(TextFormat("%i", minesArround), fontSize))/2, block.y + (block.height - fontSize)/2, fontSize, BLACK);
+    } else {
+        DrawRectangleRec(block, colorClosed);
     }
 }
