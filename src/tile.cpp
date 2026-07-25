@@ -35,12 +35,7 @@ bool tile::open()
 
 void tile::flag()
 {
-    if(!isOpen){
-    isFlagged=true;
-    }
-    if(isFlagged){
-    isFlagged=false;
-    }
+    isFlagged = !isFlagged;
 }
 
 void tile::assignRect(int cellSize, int spaceBetwen, float scale, int screenx, int screeny)
@@ -52,6 +47,7 @@ void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int scr
 {
     Color colorBorder = GRAY;
     Color colorClosed = {167,167,167,255};
+
     
     //lines (bigger squares)
     DrawRectangle(scale *  (posx * cellSize)  -screenx,scale *  (posy * cellSize)  -screeny, (cellSize)*scale, (cellSize)*scale,colorBorder);
@@ -62,6 +58,7 @@ void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int scr
         if(minesArround==0){return;}
         DrawText(TextFormat("%i", minesArround) , block.x + (block.width - MeasureText(TextFormat("%i", minesArround), fontSize))/2, block.y + (block.height - fontSize)/2, fontSize, BLACK);
     } else {
+        if(isFlagged) colorClosed = ORANGE;
         DrawRectangleRec(block, colorClosed);
     }
 }

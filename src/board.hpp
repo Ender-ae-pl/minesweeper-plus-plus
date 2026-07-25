@@ -11,15 +11,13 @@
 using namespace std;
 
 class Board {
-    int mines;
-    int cellSize=30;
-    int spaceBetwen=4;
-    Vector2 screenPos={0,0};
-    float minscale=1;
-    float scale=1;
-    
-    
     public:
+        int spaceBetwen=4;
+        float minscale=1;
+        float scale=1;
+        int cellSize=30;
+        int mines;
+        Vector2 screenPos;
         vector<vector<tile>> board;
         int width;
         int height;

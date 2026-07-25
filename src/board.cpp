@@ -10,7 +10,9 @@
 
 using namespace std;
 
-Board::Board(int width, int height, int mines):width(width),height(height),mines(mines){};
+Board::Board(int width, int height, int mines):width(width),height(height),mines(mines){
+    screenPos={0,0};
+};
 
 
 int Board::ApplyToAdjacent(tile* CenterTile, std::function<int(tile*)> f){
