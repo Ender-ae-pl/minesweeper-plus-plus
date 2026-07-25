@@ -14,7 +14,7 @@ int screenHeight = 1000;
 int main()
 {
     
-    InitWindow(screenWidth, screenHeight, "TEMPLATE");
+    InitWindow(screenWidth, screenHeight, "MINESWEEPER++");
     SetTargetFPS(60);
     
     Game game = Game();

@@ -5,7 +5,7 @@
 #include "tile.hpp"
 
 Game::Game()
-:board(15, 20, 10) //width, height, mines
+:board(60, 30, 180) //width, height, mines
 {
     board.generate(0,0,{});
     //ui = Ui();
@@ -56,33 +56,39 @@ void Game::input()
    
     }
     
+    //scroll
+    board.scale = max(board.minscale,board.scale+GetMouseWheelMove()*0.1f);
 
-    int boardWidth = board.width*board.cellSize*board.scale;
-    int boardHeight = board.height*board.cellSize*board.scale;
-
+    //movement
     if(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)){
-        board.screenPos.y = max(0.0f,board.screenPos.y-5);
+        board.screenPos.y-=5/board.scale;  
     }
     
     if(IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)){
-        board.screenPos.y=min(board.screenPos.y+5,(float)boardHeight-GetScreenHeight());
+        board.screenPos.y+=5/board.scale;
     }
-
+    
     if(IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)){
-        board.screenPos.x = max(0.0f,board.screenPos.x-5);  
+        board.screenPos.x-=5/board.scale;
     }
-
+    
     if(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)){
-        board.screenPos.x=min(board.screenPos.x+5,(float)boardWidth-GetScreenWidth());
+        board.screenPos.x+=5/board.scale;
     }
+    //corrections when going off-screen;
+    int boardWidth = board.width*board.cellSize;
+    int boardHeight = board.height*board.cellSize;
+    board.screenPos.x=max(0.0f,board.screenPos.x);
+    board.screenPos.y=max(0.0f,board.screenPos.y);
+    board.screenPos.x-=max(0.0f,board.screenPos.x+GetScreenWidth()/board.scale-(float)boardWidth);
+    board.screenPos.y-=max(0.0f,board.screenPos.y+GetScreenHeight()/board.scale-(float)boardHeight);
 
-    board.scale = max(board.minscale,board.scale+GetMouseWheelMove()*0.1f);
 }
 
 void Game::drawAll()
 {
     board.draw();
-    //ui.draw();
+    //ui.draw(🙏);
 }
 
 void Game::print()
