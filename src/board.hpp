@@ -5,13 +5,15 @@
 #include <map>
 #include <functional>
 
+class Game;
 #include "tile.hpp"
-
 
 using namespace std;
 
 class Board {
     public:
+        Game* gameptr;
+
         int spaceBetwen=4;
         float minscale=1;
         float scale=1;

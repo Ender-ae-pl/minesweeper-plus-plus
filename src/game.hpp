@@ -4,7 +4,7 @@
 class Game
 {
     Sound explosion;
-    Board board;
+    Board board; 
     //Ui ui
     
     public:
@@ -16,6 +16,7 @@ class Game
         ~Game();
         
         void input();
+        void explode();
 
         void drawAll();
         void updateAll();

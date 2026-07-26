@@ -5,6 +5,7 @@
 
 #include "board.hpp"
 #include "tile.hpp"
+#include "game.hpp"
 
 tile::tile(int posx, int posy){
     this->posx=posx;
@@ -19,7 +20,10 @@ bool tile::open()
 {
     if (isOpen) return false;
     isOpen = true;
+    isFlagged = false;
     if (isMine){
+        cout<<"TILE: "<<gameptr<<endl;
+        gameptr->explode();
         return true;
     }
     
@@ -35,6 +39,7 @@ bool tile::open()
 
 void tile::flag()
 {
+    if(isOpen){return;}
     isFlagged = !isFlagged;
 }
 
@@ -46,7 +51,7 @@ void tile::assignRect(int cellSize, int spaceBetwen, float scale, int screenx, i
 void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int screeny)
 {
     Color colorBorder = GRAY;
-    Color colorClosed = {167,167,167,255};
+    Color colorClosed = LIGHTGRAY;
 
     
     //lines (bigger squares)

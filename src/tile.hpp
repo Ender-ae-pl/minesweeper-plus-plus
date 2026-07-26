@@ -5,10 +5,14 @@
 #include <map>
 
 class Board;
+class Game;
 #include "board.hpp"
+
 
 class tile {
 public:
+    Board* boardptr;
+    Game* gameptr;
     Rectangle block;
     bool isMine;
     bool isOpen;
@@ -16,9 +20,9 @@ public:
     int minesArround;
     int adjminesnormal;
     int posx; int posy;
-    Board* boardptr;
 
-    Color color=LIGHTGRAY;
+
+    Color color={167,167,167,255};
 
     tile(int posx,int posy);
 

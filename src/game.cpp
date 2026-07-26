@@ -5,9 +5,11 @@
 #include "tile.hpp"
 
 Game::Game()
-:board(60, 30, 180) //width, height, mines
+:board(200, 100, 1800) //width, height, mines
 {
+    board.gameptr=this;
     board.generate(0,0,{});
+    cout<<"GAME: "<<this<<endl;
     //ui = Ui();
 
     InitAudioDevice();
@@ -26,6 +28,13 @@ Game::~Game()
     CloseAudioDevice();
 }
 
+void Game::explode(){
+    PlaySound(explosion);
+    WaitTime(2);
+    CloseWindow();
+}
+
+
 void Game::input()
 {
     board.assign();
@@ -35,18 +44,26 @@ void Game::input()
     //left click
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
-            if(CheckCollisionPointRec(mouse, board.board[w][h].block)){
-                tile* clickedTile = &board.board[w][h];
-                if(clickedTile->isOpen || clickedTile->isFlagged){continue;}
+        if(CheckCollisionPointRec(mouse, board.board[w][h].block)){
+            tile* clickedTile = &board.board[w][h];
+            if(clickedTile->isOpen){
+                //CHORDING
+                if(board.ApplyToAdjacent(clickedTile,[](tile* t){int flags=0;flags+=t->isFlagged;return flags;})==clickedTile->minesArround){
+                    board.ApplyToAdjacent(clickedTile,[](tile* t){
+
+                    if(t->isFlagged){return 1;}
+                    t->open();
+                    return 0;
+
+                    });
+                }
+            } else {
+                if(clickedTile->isFlagged){continue;}
 
                 clickedTile->open();
-
-                if(clickedTile->isMine) {
-                    PlaySound(explosion);
-                    WaitTime(2);
-                    CloseWindow();
-                }
+                  
             }
+        }
         }
     }
 
