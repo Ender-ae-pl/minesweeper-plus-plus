@@ -34,5 +34,5 @@ class Board {
 
         void assign();
         void print();
-        void draw();
+        void draw(Texture2D flag);
 };

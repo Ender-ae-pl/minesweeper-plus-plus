@@ -10,6 +10,7 @@ Game::Game()
     board.gameptr=this;
     board.generate(0,0,{});
     cout<<"GAME: "<<this<<endl;
+    flag = LoadTexture("pictures/flag.png");
     //ui = Ui();
 
     InitAudioDevice();
@@ -21,6 +22,7 @@ Game::Game()
 
 Game::~Game()
 {
+    UnloadTexture(flag);
     UnloadMusicStream(backMusic1);
     UnloadMusicStream(backMusic2);
     UnloadMusicStream(backMusic3);
@@ -104,7 +106,7 @@ void Game::input()
 
 void Game::drawAll()
 {
-    board.draw();
+    board.draw(flag);
     //ui.draw(🙏);
 }
 

@@ -111,11 +111,11 @@ void Board::print()
     }
 }
 
-void Board::draw(){
+void Board::draw(Texture2D flag){
     int screenx=screenPos.x;
     int screeny=screenPos.y;
 
     for (int w=0;w<width;w++) for (int h=0;h<height;h++){
-        board[w][h].draw(cellSize,spaceBetwen,scale,screenx,screeny);
+        board[w][h].draw(cellSize,spaceBetwen,scale,screenx,screeny,flag);
     }
 }

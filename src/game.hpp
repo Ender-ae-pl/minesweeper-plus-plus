@@ -11,6 +11,7 @@ class Game
         Music backMusic1;
         Music backMusic2;
         Music backMusic3;
+        Texture2D flag;
         
         Game();
         ~Game();

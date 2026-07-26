@@ -48,7 +48,7 @@ void tile::assignRect(int cellSize, int spaceBetwen, float scale, int screenx, i
     block = {scale * (spaceBetwen/2 + posx * cellSize  -screenx),scale *  (spaceBetwen/2 + posy * cellSize  -screeny), (cellSize - spaceBetwen)*scale, (cellSize - spaceBetwen)*scale};
 }
 
-void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int screeny)
+void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int screeny, Texture2D flag)
 {
     Color colorBorder = GRAY;
     Color colorClosed = LIGHTGRAY;
@@ -56,19 +56,26 @@ void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int scr
     
     //lines (bigger squares)
     DrawRectangle(scale *  (posx * cellSize-screenx),scale *  (posy * cellSize  -screeny), (cellSize)*scale, (cellSize)*scale,colorBorder);
+
+    
     
     if(isOpen){
         DrawRectangleRec(block, color);
         if(minesArround==0){return;}
-        
-        float textHeight = block.height/1.5;
+
+        float textHeight = block.height/1.5f;
         Vector2 size = MeasureTextEx(GetFontDefault(), TextFormat("%i", minesArround), 100, 0);
-        float scale = textHeight / size.y;
-        float scaledSize = 100 * scale;
+        float text_scale = textHeight / size.y;
+        float scaledSize = 100 * text_scale;
         
         DrawText(TextFormat("%i", minesArround) , block.x + (block.width - MeasureText(TextFormat("%i", minesArround), scaledSize))/2, block.y + (block.height - scaledSize)/2, scaledSize, BLACK);
     } else {
-        if(isFlagged) colorClosed = ORANGE;
         DrawRectangleRec(block, colorClosed);
+        if(isFlagged) {
+            float textureHeight = block.height*0.9f;
+            float texture_scale = textureHeight / flag.height;
+
+            DrawTextureEx(flag , (Vector2){block.x + (block.width - flag.width * texture_scale)/2, block.y + (block.height - flag.height * texture_scale)/2}, 0.0f, texture_scale, WHITE);
+        }
     }
 }
