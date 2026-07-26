@@ -59,9 +59,14 @@ void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int scr
     
     if(isOpen){
         DrawRectangleRec(block, color);
-        float fontSize = 35;
         if(minesArround==0){return;}
-        DrawText(TextFormat("%i", minesArround) , block.x + (block.width - MeasureText(TextFormat("%i", minesArround), fontSize))/2, block.y + (block.height - fontSize)/2, fontSize, BLACK);
+        
+        float textHeight = block.height/1.5;
+        Vector2 size = MeasureTextEx(GetFontDefault(), TextFormat("%i", minesArround), 100, 0);
+        float scale = textHeight / size.y;
+        float scaledSize = 100 * scale;
+        
+        DrawText(TextFormat("%i", minesArround) , block.x + (block.width - MeasureText(TextFormat("%i", minesArround), scaledSize))/2, block.y + (block.height - scaledSize)/2, scaledSize, BLACK);
     } else {
         if(isFlagged) colorClosed = ORANGE;
         DrawRectangleRec(block, colorClosed);
