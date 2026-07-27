@@ -22,7 +22,6 @@ bool tile::open()
     isOpen = true;
     isFlagged = false;
     if (isMine){
-        cout<<"TILE: "<<gameptr<<endl;
         gameptr->explode();
         return true;
     }
@@ -39,6 +38,8 @@ bool tile::open()
 
 void tile::flag()
 {
+
+
     if(isOpen){return;}
     isFlagged = !isFlagged;
 }
@@ -57,7 +58,6 @@ void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int scr
     //lines (bigger squares)
     DrawRectangle(scale *  (posx * cellSize-screenx),scale *  (posy * cellSize  -screeny), (cellSize)*scale, (cellSize)*scale,colorBorder);
 
-    
     
     if(isOpen){
         DrawRectangleRec(block, color);

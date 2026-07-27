@@ -7,7 +7,7 @@
 #include "game.hpp"
 #include "Random.hpp"
 
-Color backgroundColor = BLACK;
+Color backgroundColor = GRAY;
 int screenWidth = 1000;
 int screenHeight = 1000;
 
