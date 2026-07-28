@@ -6,11 +6,10 @@
 #include "Random.hpp"
 
 Game::Game()
-:board(200, 100, 1800) //width, height, mines
+:board(100, 50, 450) //width, height, mines
 {
     board.gameptr=this;
     board.generate(0,0,{});
-    cout<<"GAME: "<<this<<endl;
     //ui = Ui();
 
     Random rng;

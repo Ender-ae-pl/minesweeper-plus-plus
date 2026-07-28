@@ -6,7 +6,7 @@
 #include "board.hpp"
 #include "game.hpp"
 
-Color backgroundColor = BLACK;
+Color backgroundColor = GRAY;
 int screenWidth = 1000;
 int screenHeight = 1000;
 

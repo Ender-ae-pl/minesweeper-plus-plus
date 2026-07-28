@@ -35,7 +35,6 @@ void Board::generate(int x, int y, map<string,int> props){
     Random rng;
     board = vector<vector<tile>>(width,vector<tile>(height,tile(0,0)));
     //update tile position
-    cout<<"board: "<<gameptr<<endl;
     for (int i=0;i<width;i++) for (int j=0;j<height;j++){
         board[i][j].posx=i;
         board[i][j].posy=j;

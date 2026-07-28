@@ -29,7 +29,6 @@ class Board {
         int height;
 
 
-
         Board(int width, int height, int mines);
         void generate(int x, int y, map<string,int> props={});
 
