@@ -8,16 +8,14 @@ class Game
     //Ui ui
     
     public:
-        Music backMusic1;
-        Music backMusic2;
-        Music backMusic3;
-        Texture2D flag;
+        Music backMusic;
         
         Game();
         ~Game();
-        
+    
+        void explode_board();
+
         void input();
-        void explode();
 
         void drawAll();
         void updateAll();

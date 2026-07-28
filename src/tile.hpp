@@ -29,5 +29,5 @@ public:
     bool open();
     void flag();
     void assignRect(int cellSize, int spaceBetwen, float scale,int screenx,int screenys);
-    void draw(int cellSize, int spaceBetwen, float scale,int screenx,int screenys, Texture2D flag);
+    void draw(int cellSize, int spaceBetwen, float scale,int screenx,int screenys, Texture2D flag, Texture2D bomb, bool exploded);
 };

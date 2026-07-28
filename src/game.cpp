@@ -3,6 +3,7 @@
 #include "game.hpp"
 #include "board.hpp"
 #include "tile.hpp"
+#include "Random.hpp"
 
 Game::Game()
 :board(200, 100, 1800) //width, height, mines
@@ -10,32 +11,32 @@ Game::Game()
     board.gameptr=this;
     board.generate(0,0,{});
     cout<<"GAME: "<<this<<endl;
-    flag = LoadTexture("pictures/flag.png");
     //ui = Ui();
 
+    Random rng;
+    int random = rng.RandInt(1, 3);
+    
     InitAudioDevice();
+
+    if(random == 1) backMusic = LoadMusicStream("Sounds/wietnam.mp3");
+    else if(random == 2) backMusic = LoadMusicStream("Sounds/tetris.mp3");
+    else backMusic = LoadMusicStream("Sounds/zsrr.mp3");
+    
     explosion = LoadSound("Sounds/explosion.mp3");
-    backMusic1 = LoadMusicStream("Sounds/wietnam.mp3");
-    backMusic2 = LoadMusicStream("Sounds/tetris.mp3");
-    backMusic3 = LoadMusicStream("Sounds/zsrr.mp3");
 }
 
 Game::~Game()
 {
-    UnloadTexture(flag);
-    UnloadMusicStream(backMusic1);
-    UnloadMusicStream(backMusic2);
-    UnloadMusicStream(backMusic3);
+    UnloadMusicStream(backMusic);
     UnloadSound(explosion);
     CloseAudioDevice();
 }
 
-void Game::explode(){
+void Game::explode_board()
+{
     PlaySound(explosion);
-    WaitTime(2);
-    CloseWindow();
+    board.isBoardExploded = true;
 }
-
 
 void Game::input()
 {
@@ -44,35 +45,37 @@ void Game::input()
     Vector2 mouse = GetMousePosition();
 
     //left click
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
-        if(CheckCollisionPointRec(mouse, board.board[w][h].block)){
-            tile* clickedTile = &board.board[w][h];
-            if(clickedTile->isOpen){
-                //CHORDING
-                if(board.ApplyToAdjacent(clickedTile,[](tile* t){int flags=0;flags+=t->isFlagged;return flags;})==clickedTile->minesArround){
-                    board.ApplyToAdjacent(clickedTile,[](tile* t){
+    if(!board.isBoardExploded) {
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+            for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
+            if(CheckCollisionPointRec(mouse, board.board[w][h].block)){
+                tile* clickedTile = &board.board[w][h];
+                if(clickedTile->isOpen){
+                    //CHORDING
+                    if(board.ApplyToAdjacent(clickedTile,[](tile* t){int flags=0;flags+=t->isFlagged;return flags;})==clickedTile->minesArround){
+                        board.ApplyToAdjacent(clickedTile,[](tile* t){
 
-                    if(t->isFlagged){return 1;}
-                    t->open();
-                    return 0;
+                        if(t->isFlagged){return 1;}
+                        t->open();
+                        return 0;
 
-                    });
+                        });
+                    }
+                } else {
+                    if(clickedTile->isFlagged){continue;}
+
+                    clickedTile->open();
+                    
                 }
-            } else {
-                if(clickedTile->isFlagged){continue;}
-
-                clickedTile->open();
-                  
+            }
             }
         }
-        }
-    }
 
-    //right click
-    for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
-        if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) board.board[w][h].flag();
-   
+        //right click
+        for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
+            if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) board.board[w][h].flag();
+    
+        }
     }
     
     //scroll
@@ -106,7 +109,7 @@ void Game::input()
 
 void Game::drawAll()
 {
-    board.draw(flag);
+    board.draw();
     //ui.draw(🙏);
 }
 
@@ -117,6 +120,6 @@ void Game::print()
 
 void Game::updateAll()
 {
-    return;
+    if(board.isBoardExploded) StopMusicStream(backMusic);
 }
 

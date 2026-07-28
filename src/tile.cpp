@@ -23,7 +23,7 @@ bool tile::open()
     isFlagged = false;
     if (isMine){
         cout<<"TILE: "<<gameptr<<endl;
-        gameptr->explode();
+        gameptr->explode_board();
         return true;
     }
     
@@ -48,10 +48,11 @@ void tile::assignRect(int cellSize, int spaceBetwen, float scale, int screenx, i
     block = {scale * (spaceBetwen/2 + posx * cellSize  -screenx),scale *  (spaceBetwen/2 + posy * cellSize  -screeny), (cellSize - spaceBetwen)*scale, (cellSize - spaceBetwen)*scale};
 }
 
-void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int screeny, Texture2D flag)
+void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int screeny, Texture2D flag, Texture2D bomb, bool exploded)
 {
     Color colorBorder = GRAY;
     Color colorClosed = LIGHTGRAY;
+    if(isMine && exploded) colorClosed = RED;
 
     
     //lines (bigger squares)
@@ -59,7 +60,7 @@ void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int scr
 
     
     
-    if(isOpen){
+    if(isOpen && !isMine){
         DrawRectangleRec(block, color);
         if(minesArround==0){return;}
 
@@ -71,11 +72,12 @@ void tile::draw(int cellSize, int spaceBetwen, float scale, int screenx, int scr
         DrawText(TextFormat("%i", minesArround) , block.x + (block.width - MeasureText(TextFormat("%i", minesArround), scaledSize))/2, block.y + (block.height - scaledSize)/2, scaledSize, BLACK);
     } else {
         DrawRectangleRec(block, colorClosed);
-        if(isFlagged) {
-            float textureHeight = block.height*0.9f;
-            float texture_scale = textureHeight / flag.height;
 
-            DrawTextureEx(flag , (Vector2){block.x + (block.width - flag.width * texture_scale)/2, block.y + (block.height - flag.height * texture_scale)/2}, 0.0f, texture_scale, WHITE);
-        }
+        float textureHeight = block.height*0.9f;
+        float texture_scaleF = textureHeight / flag.height;
+        float texture_scaleB = textureHeight / bomb.height;
+
+        if(isFlagged) DrawTextureEx(flag , (Vector2){block.x + (block.width - flag.width * texture_scaleF)/2, block.y + (block.height - flag.height * texture_scaleF)/2}, 0.0f, texture_scaleF, WHITE);
+        else if(exploded && isMine) DrawTextureEx(bomb, (Vector2){block.x + (block.width - bomb.width * texture_scaleB)/2, block.y + (block.height - bomb.height * texture_scaleB)/2}, 0.0f, texture_scaleB, WHITE);
     }
 }
