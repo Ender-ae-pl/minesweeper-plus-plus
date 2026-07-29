@@ -13,8 +13,8 @@ using namespace std;
 
 Board::Board(int width, int height, int mines):width(width),height(height),mines(mines){
     screenPos={0,0};
-    flag = LoadTexture("pictures/flag.png");
-    bomb = LoadTexture("pictures/bomb.png");
+    flag = LoadTexture("textures/flag.png");
+    bomb = LoadTexture("textures/bomb.png");
     isBoardExploded = false;
 }
 
