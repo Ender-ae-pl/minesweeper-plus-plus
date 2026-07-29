@@ -5,7 +5,6 @@
 #include "ui.hpp"
 #include "board.hpp"
 #include "game.hpp"
-#include "Random.hpp"
 
 Color backgroundColor = GRAY;
 int screenWidth = 1000;
@@ -21,18 +20,12 @@ int main()
     game.print();
     
     //Music
-    Random rng;
-    int random = rng.RandInt(1, 3);
-    if(random == 1) PlayMusicStream(game.backMusic1);
-    else if(random == 2) PlayMusicStream(game.backMusic2);
-    else PlayMusicStream(game.backMusic3);
+    PlayMusicStream(game.backMusic);
 
     while (!WindowShouldClose())
     {
         //Music update
-        if(random == 1) UpdateMusicStream(game.backMusic1);
-        else if(random == 2) UpdateMusicStream(game.backMusic2);
-        else UpdateMusicStream(game.backMusic3);
+        UpdateMusicStream(game.backMusic);
 
         //Input
         game.input();

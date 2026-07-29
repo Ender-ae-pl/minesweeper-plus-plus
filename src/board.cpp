@@ -13,8 +13,10 @@ using namespace std;
 
 Board::Board(int width, int height, int mines):width(width),height(height),mines(mines){
     screenPos={0,0};
-};
-
+    flag = LoadTexture("pictures/flag.png");
+    bomb = LoadTexture("pictures/bomb.png");
+    isBoardExploded = false;
+}
 
 int Board::ApplyToAdjacent(tile* CenterTile, std::function<int(tile*)> f){
     int count=0;
@@ -48,7 +50,6 @@ void Board::generate(int x, int y, map<string,int> props){
         int ry = rng.RandInt(0,height-1);
         if (board[rx][ry].isMine==false && abs(rx-x)>1 && abs(ry-y)>1){
             board[rx][ry].isMine = true;
-            board[rx][ry].color = RED;
             //incrase minesArround counter other blocks
             ApplyToAdjacent(&board[rx][ry], [](tile* t){
                 t->minesArround++;
@@ -65,29 +66,6 @@ void Board::generate(int x, int y, map<string,int> props){
     scale = minscale;
 
 
-}
-
-
-
-
-void Board::move_left()
-{
-    return;
-}
-
-void Board::move_right()
-{
-    return;
-}
-
-void Board::move_up()
-{
-    return;
-}
-
-void Board::move_down()
-{
-    return;
 }
 
 void Board::assign()
@@ -110,11 +88,15 @@ void Board::print()
     }
 }
 
-void Board::draw(Texture2D flag){
+void Board::draw(){
     int screenx=screenPos.x;
     int screeny=screenPos.y;
 
     for (int w=0;w<width;w++) for (int h=0;h<height;h++){
-        board[w][h].draw(cellSize,spaceBetwen,scale,screenx,screeny,flag);
+        board[w][h].draw(cellSize,spaceBetwen,scale,screenx,screeny,flag,bomb,isBoardExploded);
+    }
+    if(isBoardExploded) {
+        int textWidth = MeasureText("GAME OVER !", 100);
+        DrawText("GAME OVER !", (GetScreenWidth() - textWidth)/2, (GetScreenHeight() - 100)/2, 100, BLACK);
     }
 }

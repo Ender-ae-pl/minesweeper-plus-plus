@@ -14,6 +14,10 @@ class Board {
     public:
         Game* gameptr;
 
+        Texture2D flag;
+        Texture2D bomb;
+
+        bool isBoardExploded;
         int spaceBetwen=4;
         float minscale=1;
         float scale=1;
@@ -23,16 +27,14 @@ class Board {
         vector<vector<tile>> board;
         int width;
         int height;
+
+
         Board(int width, int height, int mines);
         void generate(int x, int y, map<string,int> props={});
 
         int ApplyToAdjacent(tile* CenterTile, std::function<int(tile*)> f);
-        void move_left();
-        void move_right();
-        void move_up();
-        void move_down();
 
         void assign();
         void print();
-        void draw(Texture2D flag);
+        void draw();
 };
