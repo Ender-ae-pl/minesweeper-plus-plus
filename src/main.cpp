@@ -2,13 +2,13 @@
 #include <iostream>
 #include <map>
 
-#include "ui.hpp"
-#include "board.hpp"
 #include "game.hpp"
+#include "menu.hpp"
 
 Color backgroundColor = GRAY;
-int screenWidth = 1000;
-int screenHeight = 1000;
+const int screenWidth = 1000;
+const int screenHeight = 1000;
+bool gameStarted = false;
 
 int main()
 {
@@ -17,7 +17,7 @@ int main()
     SetTargetFPS(60);
     
     Game game = Game();
-    game.print();
+    Menu menu = Menu();
     
     //Music
     PlayMusicStream(game.backMusic);
@@ -28,15 +28,17 @@ int main()
         UpdateMusicStream(game.backMusic);
 
         //Input
-        game.input();
+        if(gameStarted) game.input();
+        else menu.Input(gameStarted);
 
         // Update
-        game.updateAll();
+        if(gameStarted) game.updateAll();
         
         BeginDrawing();
         ClearBackground(backgroundColor);
             // Draw
-            game.drawAll();
+            if(gameStarted) game.drawAll();
+            else menu.Draw();
 
         EndDrawing();
     }
