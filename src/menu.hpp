@@ -4,11 +4,12 @@
 #include <vector>
 
 #include "button.hpp"
+#include "button_music.hpp"
 
 class Menu
 {
     Texture2D background; float back_scale;
-    Button musicButton;
+    Button_music musicButton;
     Button startButton;
     Button exitButton;
     std::vector<Button> boardsChoice;

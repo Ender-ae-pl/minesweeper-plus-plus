@@ -3,16 +3,7 @@
 #include <iostream>
 #include <raymath.h>
 
-void Button::ChangeMusic()
-{
-    allmusicptr ->musicChoice++;
-    if(allmusicptr->musicChoice == 3) allmusicptr->musicChoice = 0;
-    
-    this->music = allmusicptr->musicChoice;
-    allmusicptr ->mustChangeMusic = true;
-}
-
-Button::Button(const char *imagePath, float scale, bool doCenter, Vector2 offset,AllMusic* allmusicptr, Color rectArowndClolor)
+Button::Button(const char *imagePath, float scale, bool doCenter, Vector2 offset)
 {
     Image image = LoadImage(imagePath);
     
@@ -27,13 +18,6 @@ Button::Button(const char *imagePath, float scale, bool doCenter, Vector2 offset
     else posicion = offset;
     
     IsClicked = false;
-    
-    ///Specyfic for music button
-    if(allmusicptr != nullptr) {
-        this->allmusicptr = allmusicptr;
-        this->rectArowndClolor = rectArowndClolor;
-        this->music = allmusicptr->musicChoice;
-    }
 }
 
 Button::~Button()
@@ -56,16 +40,6 @@ Vector2 Button::GetCenterPosicion()
 
     return {withCenter, heightCenter};
 }
-
-void Button::DrawRectangleArownd()
-{
-    if(music == 0) rectArowndClolor = RED;
-    else if(music == 1) rectArowndClolor = BLUE;
-    else if(music == 2) rectArowndClolor = GREEN;
-    int offset = 3; //How many bigger than texture
-    DrawRectangle(posicion.x - offset + 1.5f, posicion.y - offset, texture.width + offset * 2, texture.height + offset * 2, rectArowndClolor);
-}
-
 
 void Button::Draw()
 {
