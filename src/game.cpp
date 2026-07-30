@@ -5,30 +5,19 @@
 #include "tile.hpp"
 #include "Random.hpp"
 
-Game::Game()
+Game::Game(AllMusic* allmusicptr)
 :board(100, 50, 450) //width, height, mines
 {
     board.gameptr=this;
     board.generate(0,0,{});
     //ui = Ui();
-
-    Random rng;
-    int random = rng.RandInt(1, 3);
-    
-    InitAudioDevice();
-
-    if(random == 1) backMusic = LoadMusicStream("Sounds/wietnam.mp3");
-    else if(random == 2) backMusic = LoadMusicStream("Sounds/tetris.mp3");
-    else backMusic = LoadMusicStream("Sounds/zsrr.mp3");
-    
     explosion = LoadSound("Sounds/explosion.mp3");
+    this->allmusicptr = allmusicptr;
 }
 
 Game::~Game()
 {
-    UnloadMusicStream(backMusic);
     UnloadSound(explosion);
-    CloseAudioDevice();
 }
 
 void Game::explode_board()
@@ -119,6 +108,6 @@ void Game::print()
 
 void Game::updateAll()
 {
-    if(board.isBoardExploded) StopMusicStream(backMusic);
+    if(board.isBoardExploded) StopMusicStream(allmusicptr->backMusic);
 }
 

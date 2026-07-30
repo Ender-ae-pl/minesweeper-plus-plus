@@ -16,7 +16,7 @@ class Menu
     bool choiceBoard;
 
     public:
-    Menu();
+    Menu(AllMusic* allmusicptr);
     ~Menu();
 
     void BackgroundDraw();

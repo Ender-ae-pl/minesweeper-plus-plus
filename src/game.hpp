@@ -1,16 +1,16 @@
 #include "board.hpp"
 #include "ui.hpp"
+#include "AllMusic.hpp"
 
 class Game
 {
+    AllMusic* allmusicptr;
     Sound explosion;
     Board board; 
     //Ui ui
     
     public:
-        Music backMusic;
-        
-        Game();
+        Game(AllMusic* allmusicptr);
         ~Game();
     
         void explode_board();

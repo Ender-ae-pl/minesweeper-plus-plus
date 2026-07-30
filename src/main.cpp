@@ -2,8 +2,9 @@
 #include <iostream>
 #include <map>
 
-#include "game.hpp"
 #include "menu.hpp"
+#include "game.hpp"
+#include "AllMusic.hpp"
 
 Color backgroundColor = GRAY;
 const int screenWidth = 1000;
@@ -16,16 +17,17 @@ int main()
     InitWindow(screenWidth, screenHeight, "MINESWEEPER++");
     SetTargetFPS(60);
     
-    Game game = Game();
-    Menu menu = Menu();
+    AllMusic allmusic = AllMusic();
+    Game game = Game(&allmusic);
+    Menu menu = Menu(&allmusic);
     
     //Music
-    PlayMusicStream(game.backMusic);
+    PlayMusicStream(allmusic.backMusic);
 
     while (!WindowShouldClose())
     {
         //Music update
-        UpdateMusicStream(game.backMusic);
+        UpdateMusicStream(allmusic.backMusic);
 
         //Input
         if(gameStarted) game.input();
@@ -33,6 +35,7 @@ int main()
 
         // Update
         if(gameStarted) game.updateAll();
+        if(allmusic.mustChangeMusic) allmusic.changeMuisc();
         
         BeginDrawing();
         ClearBackground(backgroundColor);
