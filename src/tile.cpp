@@ -28,7 +28,7 @@ bool tile::open()
     
     if (minesArround==0){
         boardptr->ApplyToAdjacent(this,[](tile* t){
-            t->open();
+            t->open(); //zrzut
             return 0;
         });
     }

@@ -3,7 +3,6 @@
 #include <map>
 
 #include "menu.hpp"
-#include "game.hpp"
 #include "AllMusic.hpp"
 
 Color backgroundColor = GRAY;
@@ -18,7 +17,7 @@ int main()
     SetTargetFPS(60);
     
     AllMusic allmusic = AllMusic();
-    Game game = Game(&allmusic);
+    Game game = Game();
     Menu menu = Menu(&allmusic);
     
     //Music
@@ -31,7 +30,7 @@ int main()
 
         //Input
         if(gameStarted) game.input();
-        else menu.Input(gameStarted);
+        else {menu.Input(gameStarted); if(gameStarted) game = menu.createGame(&allmusic);}
 
         // Update
         if(gameStarted) game.updateAll();

@@ -4,7 +4,7 @@
 
 class AllMusic
 {
-    const char* paths[3] = {"Sounds/wietnam.mp3", "Sounds/tetris.mp3", "Sounds/zsrr.mp3"};
+    const char* paths[3] = {"Sounds/popcorn.mp3", "Sounds/tetris.mp3", "Sounds/zsrr.mp3"};
     Music musics[3];
 
     

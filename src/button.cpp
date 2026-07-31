@@ -33,6 +33,13 @@ bool Button::IsPressd(Vector2 mousePosicion, bool mousePressed)
     return false;
 }
 
+void Button::DrawTextInside(const char *text, int textSize)
+{
+    int textWidth = MeasureText(text, textSize);
+
+    DrawText(text, posicion.x + (texture.width - textWidth)/2, posicion.y + (texture.height - textSize)/2, textSize, WHITE);
+}
+
 Vector2 Button::GetCenterPosicion()
 {
     float withCenter = (GetScreenWidth() - texture.width)/2;

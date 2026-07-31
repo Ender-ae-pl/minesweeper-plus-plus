@@ -5,8 +5,8 @@
 #include "tile.hpp"
 #include "Random.hpp"
 
-Game::Game(AllMusic* allmusicptr)
-:board(100, 50, 450) //width, height, mines
+Game::Game(AllMusic* allmusicptr,  int width, int height, int mines)
+:board(width, height, mines)
 {
     board.gameptr=this;
     board.generate(0,0,{});
@@ -42,16 +42,17 @@ void Game::input()
                     //CHORDING
                     if(board.ApplyToAdjacent(clickedTile,[](tile* t){int flags=0;flags+=t->isFlagged;return flags;})==clickedTile->minesArround){
                         board.ApplyToAdjacent(clickedTile,[](tile* t){
-
-                        if(t->isFlagged){return 1;}
-                        t->open();
-                        return 0;
-
+                            
+                            if(t->isFlagged){return 1;}
+                            t->open();
+                            return 0;
+                            
                         });
                     }
                 } else {
                     if(clickedTile->isFlagged){continue;}
-
+                    
+                    
                     clickedTile->open();
                     
                 }
@@ -62,7 +63,6 @@ void Game::input()
         //right click
         for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
             if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) board.board[w][h].flag();
-    
         }
     }
     
