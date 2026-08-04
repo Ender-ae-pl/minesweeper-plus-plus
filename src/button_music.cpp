@@ -16,7 +16,7 @@ Button_music::~Button_music()
 void Button_music::ChangeMusic()
 {
     allmusicptr ->musicChoice++;
-    if(allmusicptr->musicChoice == 3) allmusicptr->musicChoice = 0;
+    if(allmusicptr->musicChoice == 4) allmusicptr->musicChoice = 0;
     
     this->music = allmusicptr->musicChoice;
     allmusicptr ->mustChangeMusic = true;
@@ -24,9 +24,10 @@ void Button_music::ChangeMusic()
 
 void Button_music::DrawRectangleArownd()
 {
-    if(music == 0) rectArowndClolor = RED;
+    if(music == 0) rectArowndClolor = GREEN;
     else if(music == 1) rectArowndClolor = BLUE;
-    else if(music == 2) rectArowndClolor = GREEN;
+    else if(music == 2) rectArowndClolor = RED;
+    else if(music == 3) rectArowndClolor = PURPLE;
     int offset = 3; //How many bigger than texture
     DrawRectangle(posicion.x - offset + 1.5f, posicion.y - offset, texture.width + offset * 2, texture.height + offset * 2, rectArowndClolor);
 }
