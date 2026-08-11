@@ -29,7 +29,7 @@ int main()
         UpdateMusicStream(allmusic.backMusic);
 
         //Input
-        if(gameStarted) game->input();
+        if(gameStarted) game->input(gameStarted);
         else {menu.Input(gameStarted); if(gameStarted) {game = new Game(menu.createGame(&allmusic));}}
 
         // Update

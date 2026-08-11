@@ -26,40 +26,41 @@ void Game::explode_board()
     board.isBoardExploded = true;
 }
 
-void Game::input()
+void Game::input(bool &gameStarted)
 {
     board.assign();
 
     Vector2 mouse = GetMousePosition();
 
+    
     //left click
     if(!board.isBoardExploded) {
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
             for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
-            if(CheckCollisionPointRec(mouse, board.board[w][h].block)){
-                tile* clickedTile = &board.board[w][h];
-                if(clickedTile->isOpen){
-                    //CHORDING
-                    if(board.ApplyToAdjacent(clickedTile,[](tile* t){int flags=0;flags+=t->isFlagged;return flags;})==clickedTile->minesArround){
-                        board.ApplyToAdjacent(clickedTile,[](tile* t){
-                            
-                            if(t->isFlagged){return 1;}
-                            t->open();
-                            return 0;
-                            
-                        });
+                if(CheckCollisionPointRec(mouse, board.board[w][h].block)){
+                    tile* clickedTile = &board.board[w][h];
+                    if(clickedTile->isOpen){
+                        //CHORDING
+                        if(board.ApplyToAdjacent(clickedTile,[](tile* t){int flags=0;flags+=t->isFlagged;return flags;})==clickedTile->minesArround){
+                            board.ApplyToAdjacent(clickedTile,[](tile* t){
+                                
+                                if(t->isFlagged){return 1;}
+                                t->open();
+                                return 0;
+                                
+                            });
+                        }
+                    } else {
+                        if(clickedTile->isFlagged){continue;}
+                        
+                        
+                        clickedTile->open();
+                        
                     }
-                } else {
-                    if(clickedTile->isFlagged){continue;}
-                    
-                    
-                    clickedTile->open();
-                    
                 }
             }
-            }
         }
-
+        
         //right click
         for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
             if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) board.board[w][h].flag();
@@ -68,7 +69,7 @@ void Game::input()
     
     //scroll
     board.scale = max(board.minscale,board.scale+GetMouseWheelMove()*0.1f);
-
+    
     //movement
     if(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)){
         board.screenPos.y-=5/board.scale;  
@@ -92,6 +93,15 @@ void Game::input()
     board.screenPos.y=max(0.0f,board.screenPos.y);
     board.screenPos.x-=max(0.0f,board.screenPos.x+GetScreenWidth()/board.scale-(float)boardWidth);
     board.screenPos.y-=max(0.0f,board.screenPos.y+GetScreenHeight()/board.scale-(float)boardHeight);
+    
+
+    ///Turning to menu when player click any key when game is over
+    int keyPressed = GetKeyPressed();
+    if(keyPressed != 0 && board.isBoardExploded) {
+        PlayMusicStream(allmusicptr->backMusic);
+        board.isBoardExploded = false;
+        gameStarted = false;
+    }
 
 }
 

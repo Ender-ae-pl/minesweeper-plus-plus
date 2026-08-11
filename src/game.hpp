@@ -15,7 +15,7 @@ class Game
     
         void explode_board();
 
-        void input();
+        void input(bool &gameStarted);
 
         void drawAll();
         void updateAll();
