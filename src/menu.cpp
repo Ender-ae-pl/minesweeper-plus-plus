@@ -39,7 +39,7 @@ Game Menu::createGame(AllMusic* allmusicptr)
     if(withBoard == 1) {with = 9; height = 9; mines = 21;}
     if(withBoard == 2) {with = 16; height = 16; mines = 61;}
     if(withBoard == 3) {with = 24; height = 24; mines = 144;}
-    return Game{allmusicptr, with, height, mines};
+    return {allmusicptr, with, height, mines};
 }
 
 void Menu::BackgroundDraw()

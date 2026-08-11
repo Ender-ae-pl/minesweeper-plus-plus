@@ -17,7 +17,7 @@ int main()
     SetTargetFPS(60);
     
     AllMusic allmusic = AllMusic();
-    Game game = Game();
+    Game *game;
     Menu menu = Menu(&allmusic);
     
     //Music
@@ -29,17 +29,17 @@ int main()
         UpdateMusicStream(allmusic.backMusic);
 
         //Input
-        if(gameStarted) game.input();
-        else {menu.Input(gameStarted); if(gameStarted) game = menu.createGame(&allmusic);}
+        if(gameStarted) game->input();
+        else {menu.Input(gameStarted); if(gameStarted) {game = new Game(menu.createGame(&allmusic));}}
 
         // Update
-        if(gameStarted) game.updateAll();
+        if(gameStarted) game->updateAll();
         if(allmusic.mustChangeMusic) allmusic.changeMuisc();
         
         BeginDrawing();
         ClearBackground(backgroundColor);
             // Draw
-            if(gameStarted) game.drawAll();
+            if(gameStarted) game->drawAll();
             else menu.Draw();
 
         EndDrawing();
