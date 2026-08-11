@@ -4,7 +4,7 @@
 #include "menu.hpp"
 
 Menu::Menu(AllMusic* allmusicptr)
-: musicButton("textures/menuTextures/music_icon.png", 0.06, false, {4, 5}, allmusicptr), startButton("textures/menuTextures/button_start.png", 0.5, true, {0, -110}), exitButton("textures/menuTextures/button_exit.png", 0.5, true , {0, 110})
+: musicButton("textures/menuTextures/music_icon.png", 0.06, false, {4, 5}, allmusicptr), backButton("textures/menuTextures/arrow.png", 0.06, false, {4, 5}), startButton("textures/menuTextures/button_start.png", 0.5, true, {0, -110}), exitButton("textures/menuTextures/button_exit.png", 0.5, true , {0, 110})
 {
     background = LoadTexture("textures/menuTextures/background.png");
     back_scale = static_cast<float>(GetScreenHeight()) / background.height;
@@ -25,6 +25,7 @@ void Menu::Input(bool &gameStarted)
 {
     if(choiceBoard) for(int i = 0; i < boardsChoice.size(); i++) {
         if(boardsChoice[i].IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) {withBoard = i; gameStarted = true;}
+        if(backButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) choiceBoard = false;
     } else {
         if(startButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) choiceBoard = true;
         if(exitButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) CloseWindow();
@@ -51,6 +52,10 @@ void Menu::Draw()
 {
     BackgroundDraw();
     if(choiceBoard) for(int i = 0; i < boardsChoice.size(); i++) {
+        //back button draw
+        backButton.Draw();
+        
+        //Board buttons draw
         char* text; int textSize;
 
         if(i == 0) {text = "4x4 4M"; textSize = 50;}

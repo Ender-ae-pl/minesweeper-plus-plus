@@ -44,6 +44,8 @@ int main()
 
         EndDrawing();
     }
+
+    delete game;
     
     CloseWindow();
 }

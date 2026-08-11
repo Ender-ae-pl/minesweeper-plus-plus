@@ -11,6 +11,7 @@ class Menu
 {
     Texture2D background; float back_scale;
     Button_music musicButton;
+    Button backButton;
     Button startButton;
     Button exitButton;
 
