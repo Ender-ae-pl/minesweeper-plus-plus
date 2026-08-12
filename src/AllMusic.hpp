@@ -11,7 +11,6 @@ class AllMusic
     public:
     Music backMusic;
     int musicChoice;
-    bool mustChangeMusic;
 
     AllMusic();
     ~AllMusic();

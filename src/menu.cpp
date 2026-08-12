@@ -29,7 +29,9 @@ void Menu::Input(bool &gameStarted)
     } else {
         if(startButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) choiceBoard = true;
         if(exitButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) CloseWindow();
-        if(musicButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) musicButton.ChangeMusic();
+
+        //changeing music
+        if(musicButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) || IsKeyPressed(KEY_M)) musicButton.ChangeMusic();
     }
 }
 

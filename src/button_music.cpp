@@ -15,11 +15,9 @@ Button_music::~Button_music()
 
 void Button_music::ChangeMusic()
 {
-    allmusicptr ->musicChoice++;
-    if(allmusicptr->musicChoice == 4) allmusicptr->musicChoice = 0;
+    allmusicptr->changeMuisc();
     
     this->music = allmusicptr->musicChoice;
-    allmusicptr ->mustChangeMusic = true;
 }
 
 void Button_music::DrawRectangleArownd()

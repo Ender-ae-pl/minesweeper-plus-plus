@@ -86,6 +86,10 @@ void Game::input(bool &gameStarted)
     if(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)){
         board.screenPos.x+=5/board.scale;
     }
+
+    //changeing music
+    if(IsKeyPressed(KEY_M)) allmusicptr->changeMuisc();
+
     //corrections when going off-screen;
     int boardWidth = board.width*board.cellSize;
     int boardHeight = board.height*board.cellSize;
@@ -94,7 +98,7 @@ void Game::input(bool &gameStarted)
     board.screenPos.x-=max(0.0f,board.screenPos.x+GetScreenWidth()/board.scale-(float)boardWidth);
     board.screenPos.y-=max(0.0f,board.screenPos.y+GetScreenHeight()/board.scale-(float)boardHeight);
     
-
+    
     ///Turning to menu when player click any key when game is over
     int keyPressed = GetKeyPressed();
     if(keyPressed != 0 && board.isBoardExploded) {

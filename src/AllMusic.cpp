@@ -14,8 +14,6 @@ AllMusic::AllMusic()
     for (int i = 0; i < 4; i++) {if(random == i) musicChoice = i;}
     
     backMusic = musics[musicChoice];
-    
-    mustChangeMusic = false;
 }
 
 AllMusic::~AllMusic()
@@ -27,7 +25,9 @@ AllMusic::~AllMusic()
 
 void AllMusic::changeMuisc()
 {
+    musicChoice++;
+    if(musicChoice == 4) musicChoice = 0;
+
     backMusic = musics[musicChoice];
-    mustChangeMusic = false;
     PlayMusicStream(backMusic);
 }

@@ -34,7 +34,6 @@ int main()
 
         // Update
         if(gameStarted) game->updateAll();
-        if(allmusic.mustChangeMusic) allmusic.changeMuisc();
         
         BeginDrawing();
         ClearBackground(backgroundColor);
