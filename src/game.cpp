@@ -30,43 +30,6 @@ void Game::input(bool &gameStarted)
 {
     board.assign();
 
-    Vector2 mouse = GetMousePosition();
-
-    
-    //left click
-    if(!board.isBoardExploded) {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-            for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
-                if(CheckCollisionPointRec(mouse, board.board[w][h].block)){
-                    tile* clickedTile = &board.board[w][h];
-                    if(clickedTile->isOpen){
-                        //CHORDING
-                        if(board.ApplyToAdjacent(clickedTile,[](tile* t){int flags=0;flags+=t->isFlagged;return flags;})==clickedTile->minesArround){
-                            board.ApplyToAdjacent(clickedTile,[](tile* t){
-                                
-                                if(t->isFlagged){return 1;}
-                                t->open();
-                                return 0;
-                                
-                            });
-                        }
-                    } else {
-                        if(clickedTile->isFlagged){continue;}
-                        
-                        
-                        clickedTile->open();
-                        
-                    }
-                }
-            }
-        }
-        
-        //right click
-        for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
-            if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) board.board[w][h].flag();
-        }
-    }
-    
     //scroll
     board.scale = max(board.minscale,board.scale+GetMouseWheelMove()*0.1f);
     
@@ -105,8 +68,47 @@ void Game::input(bool &gameStarted)
         PlayMusicStream(allmusicptr->backMusic);
         board.isBoardExploded = false;
         gameStarted = false;
+    } else if(keyPressed != 0 && board.winGame) {
+        board.winGame = false;
+        gameStarted = false;
     }
 
+
+    if(!board.isBoardExploded && !board.winGame) {
+        Vector2 mouse = GetMousePosition();
+        
+        //left click
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+            for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
+                if(CheckCollisionPointRec(mouse, board.board[w][h].block)){
+                    tile* clickedTile = &board.board[w][h];
+                    if(clickedTile->isOpen){
+                        //CHORDING
+                        if(board.ApplyToAdjacent(clickedTile,[](tile* t){int flags=0;flags+=t->isFlagged;return flags;})==clickedTile->minesArround){
+                            board.ApplyToAdjacent(clickedTile,[](tile* t){
+                                
+                                if(t->isFlagged){return 1;}
+                                t->open();
+                                return 0;
+                                
+                            });
+                        }
+                    } else {
+                        if(clickedTile->isFlagged){continue;}
+                        
+                        
+                        clickedTile->open();
+                        
+                    }
+                }
+            }
+        }
+        
+        //right click
+        for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
+            if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) board.board[w][h].flag();
+        }
+    }
 }
 
 void Game::drawAll()
@@ -123,5 +125,6 @@ void Game::print()
 void Game::updateAll()
 {
     if(board.isBoardExploded) StopMusicStream(allmusicptr->backMusic);
+    board.update();
 }
 
