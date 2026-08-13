@@ -31,8 +31,8 @@ void Menu::Input(bool &gameStarted)
         if(exitButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) CloseWindow();
 
         //changeing music
-        if(musicButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) || IsKeyPressed(KEY_M)) musicButton.ChangeMusic();
     }
+    if(musicButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) || IsKeyPressed(KEY_M)) musicButton.ChangeMusic();
 }
 
 Game Menu::createGame(AllMusic* allmusicptr)
