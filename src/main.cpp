@@ -2,13 +2,12 @@
 #include <iostream>
 #include <map>
 
-#include "menu.hpp"
+#include "game.hpp"
 #include "AllMusic.hpp"
 
 Color backgroundColor = GRAY;
 const int screenWidth = 1000;
 const int screenHeight = 1000;
-bool gameStarted = false;
 
 int main()
 {
@@ -17,8 +16,7 @@ int main()
     SetTargetFPS(60);
     
     AllMusic allmusic = AllMusic();
-    Game *game;
-    Menu menu = Menu(&allmusic);
+    Game game(&allmusic);
     
     //Music
     PlayMusicStream(allmusic.backMusic);
@@ -29,22 +27,18 @@ int main()
         UpdateMusicStream(allmusic.backMusic);
 
         //Input
-        if(gameStarted) game->input(gameStarted);
-        else {menu.Input(gameStarted); if(gameStarted) {game = new Game(menu.createGame(&allmusic));}}
+        game.input();
 
         // Update
-        if(gameStarted) game->updateAll();
+        game.updateAll();
         
         BeginDrawing();
         ClearBackground(backgroundColor);
             // Draw
-            if(gameStarted) game->drawAll();
-            else menu.Draw();
+            game.drawAll();
 
         EndDrawing();
     }
-
-    delete game;
     
     CloseWindow();
 }

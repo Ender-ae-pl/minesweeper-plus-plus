@@ -75,6 +75,7 @@ int Board::countOpens()
     for (int w=0;w<width;w++) for (int h=0;h<height;h++){
         if(board[w][h].isOpen) openBlocks++;
     }
+    
     return openBlocks;
 }
 
@@ -82,7 +83,7 @@ void Board::assign()
 {
     int screenx=screenPos.x;
     int screeny=screenPos.y;
-
+    
     for (int w=0;w<width;w++) for (int h=0;h<height;h++){
         board[w][h].assignRect(cellSize,spaceBetwen,scale,screenx,screeny);
     }

@@ -3,7 +3,7 @@
 #include <raylib.h>
 #include <vector>
 
-#include "game.hpp"
+#include "board.hpp"
 #include "button.hpp"
 #include "button_music.hpp"
 
@@ -25,7 +25,7 @@ class Menu
     Menu(AllMusic* allmusicptr);
     ~Menu();
 
-    Game createGame(AllMusic* allmusicptr);
+    Board createBoard();
     void BackgroundDraw();
     void Input(bool &gameStarted);
     void Draw();
