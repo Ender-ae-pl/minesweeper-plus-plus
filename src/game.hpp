@@ -12,8 +12,12 @@ class Game
     Board* boardptr; 
     //Ui ui;
     bool gameStarted;
+
     
     public:
+        //custom game valables
+        int customWidth, customHeight, customMines;
+
         Game(AllMusic* allmusicptr=nullptr);
         ~Game();
     

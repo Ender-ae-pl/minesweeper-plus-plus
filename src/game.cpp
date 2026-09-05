@@ -6,7 +6,7 @@
 #include "Random.hpp"
 
 Game::Game(AllMusic* allmusicptr)
-:menu(allmusicptr)
+:menu(allmusicptr, this)
 {
     //ui = Ui();
     explosion = LoadSound("Sounds/explosion.mp3");
@@ -71,9 +71,13 @@ void Game::input()
             PlayMusicStream(allmusicptr->backMusic);
             boardptr -> isBoardExploded = false;
             gameStarted = false;
+            menu.place = 0;
+            menu.wchihBoard = 0;
         } else if(keyPressed != 0 && boardptr -> winGame) {
             boardptr -> winGame = false;
             gameStarted = false;
+            menu.place = 0;
+            menu.wchihBoard = 0;
         }
 
 
@@ -118,6 +122,8 @@ void Game::input()
             boardptr = new Board(menu.createBoard());
             boardptr -> gameptr = this;
             boardptr -> generate(0,0,{});
+        } else if(menu.wchihBoard == 3) {
+            menu.place = 2;
         }
     }
 }
