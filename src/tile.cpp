@@ -28,11 +28,11 @@ bool tile::open()
     
     if (minesArround==0){
         boardptr->ApplyToAdjacent(this,[](tile* t){
-            t->open();
+           t->open();
             return 0;
         });
     }
-
+    
     return false;
 }
 

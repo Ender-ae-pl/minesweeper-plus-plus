@@ -16,6 +16,7 @@ Board::Board(int width, int height, int mines):width(width),height(height),mines
     flag = LoadTexture("textures/flag.png");
     bomb = LoadTexture("textures/bomb.png");
     isBoardExploded = false;
+    winGame = false;
 }
 
 int Board::ApplyToAdjacent(tile* CenterTile, std::function<int(tile*)> f){
@@ -68,11 +69,21 @@ void Board::generate(int x, int y, map<string,int> props){
 
 }
 
+int Board::countOpens()
+{
+    int openBlocks = 0;
+    for (int w=0;w<width;w++) for (int h=0;h<height;h++){
+        if(board[w][h].isOpen) openBlocks++;
+    }
+    
+    return openBlocks;
+}
+
 void Board::assign()
 {
     int screenx=screenPos.x;
     int screeny=screenPos.y;
-
+    
     for (int w=0;w<width;w++) for (int h=0;h<height;h++){
         board[w][h].assignRect(cellSize,spaceBetwen,scale,screenx,screeny);
     }
@@ -88,7 +99,14 @@ void Board::print()
     }
 }
 
+void Board::update()
+{
+    if(countOpens() + mines == width*height) winGame = true;
+}
+
 void Board::draw(){
+    int textWidth;
+    int textWidthContinue = MeasureText("[PRESS ANY KEY TO CONTINUE]", 20);
     int screenx=screenPos.x;
     int screeny=screenPos.y;
 
@@ -96,7 +114,14 @@ void Board::draw(){
         board[w][h].draw(cellSize,spaceBetwen,scale,screenx,screeny,flag,bomb,isBoardExploded);
     }
     if(isBoardExploded) {
-        int textWidth = MeasureText("GAME OVER !", 100);
-        DrawText("GAME OVER !", (GetScreenWidth() - textWidth)/2, (GetScreenHeight() - 100)/2, 100, BLACK);
+        //lose text
+        textWidth = MeasureText("GAME OVER !", 100);
+        DrawText("GAME OVER !", (GetScreenWidth() - textWidth)/2, (GetScreenHeight() - 100)/2, 100, Color{139, 0, 0, 255}); //DARK RED
+        DrawText("[PRESS ANY KEY TO CONTINUE]", (GetScreenWidth() - textWidthContinue)/2, (GetScreenHeight() - 20)/2 + 100, 20, WHITE);
+    } else if(winGame) {
+        //win text
+        textWidth = MeasureText("WINNER!", 100);
+        DrawText("WINNER!", (GetScreenWidth() - textWidth)/2, (GetScreenHeight() - 100)/2, 100, GREEN);
+        DrawText("[PRESS ANY KEY TO CONTINUE]", (GetScreenWidth() - textWidthContinue)/2, (GetScreenHeight() - 20)/2 + 100, 20, WHITE);
     }
 }
