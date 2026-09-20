@@ -5,120 +5,143 @@
 #include "tile.hpp"
 #include "Random.hpp"
 
-Game::Game()
-:board(100, 50, 450) //width, height, mines
+Game::Game(AllMusic* allmusicptr)
+:menu(allmusicptr, this)
 {
-    board.gameptr=this;
-    board.generate(0,0,{});
     //ui = Ui();
-
-    Random rng;
-    int random = rng.RandInt(1, 3);
-    
-    InitAudioDevice();
-
-    if(random == 1) backMusic = LoadMusicStream("Sounds/wietnam.mp3");
-    else if(random == 2) backMusic = LoadMusicStream("Sounds/tetris.mp3");
-    else backMusic = LoadMusicStream("Sounds/zsrr.mp3");
-    
     explosion = LoadSound("Sounds/explosion.mp3");
+    this->allmusicptr = allmusicptr;
+
+    gameStarted = false;
 }
 
 Game::~Game()
 {
-    UnloadMusicStream(backMusic);
     UnloadSound(explosion);
-    CloseAudioDevice();
+    delete boardptr;
 }
 
 void Game::explode_board()
 {
     PlaySound(explosion);
-    board.isBoardExploded = true;
+    boardptr -> isBoardExploded = true;
 }
 
 void Game::input()
 {
-    board.assign();
+    if(gameStarted)
+    {
+        boardptr -> assign();
 
-    Vector2 mouse = GetMousePosition();
+        //scroll
+        boardptr -> scale = max(boardptr -> minscale,boardptr -> scale+GetMouseWheelMove()*0.1f);
+        
+        //movement
+        if(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)){
+            boardptr -> screenPos.y-=5/boardptr -> scale;  
+        }
+        
+        if(IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)){
+            boardptr -> screenPos.y+=5/boardptr -> scale;
+        }
+        
+        if(IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)){
+            boardptr -> screenPos.x-=5/boardptr -> scale;
+        }
+        
+        if(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)){
+            boardptr -> screenPos.x+=5/boardptr -> scale;
+        }
 
-    //left click
-    if(!board.isBoardExploded) {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-            for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
-            if(CheckCollisionPointRec(mouse, board.board[w][h].block)){
-                tile* clickedTile = &board.board[w][h];
-                if(clickedTile->isOpen){
-                    //CHORDING
-                    if(board.ApplyToAdjacent(clickedTile,[](tile* t){int flags=0;flags+=t->isFlagged;return flags;})==clickedTile->minesArround){
-                        board.ApplyToAdjacent(clickedTile,[](tile* t){
+        //changeing music
+        if(IsKeyPressed(KEY_M)) allmusicptr->changeMuisc();
 
-                        if(t->isFlagged){return 1;}
-                        t->open();
-                        return 0;
+        //corrections when going off-screen;
+        int boardWidth = boardptr -> width*boardptr -> cellSize;
+        int boardHeight = boardptr -> height*boardptr -> cellSize;
+        boardptr -> screenPos.x=max(0.0f,boardptr -> screenPos.x);
+        boardptr -> screenPos.y=max(0.0f,boardptr -> screenPos.y);
+        boardptr -> screenPos.x-=max(0.0f,boardptr -> screenPos.x+GetScreenWidth()/boardptr -> scale-(float)boardWidth);
+        boardptr -> screenPos.y-=max(0.0f,boardptr -> screenPos.y+GetScreenHeight()/boardptr -> scale-(float)boardHeight);
+        
+        
+        ///Turning to menu when player click any key when game is over
+        int keyPressed = GetKeyPressed();
+        if(keyPressed != 0 && boardptr -> isBoardExploded) {
+            PlayMusicStream(allmusicptr->backMusic);
+            boardptr -> isBoardExploded = false;
+            gameStarted = false;
+            menu.place = 0;
+            menu.wchihBoard = 0;
+        } else if(keyPressed != 0 && boardptr -> winGame) {
+            boardptr -> winGame = false;
+            gameStarted = false;
+            menu.place = 0;
+            menu.wchihBoard = 0;
+        }
 
-                        });
+
+        if(!boardptr -> isBoardExploded && !boardptr -> winGame) {
+            Vector2 mouse = GetMousePosition();
+            
+            //left click
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+                for (int w = 0; w < boardptr -> width; w++) for (int h = 0; h < boardptr -> height; h++){
+                    if(CheckCollisionPointRec(mouse, boardptr -> board[w][h].block)){
+                        tile* clickedTile = &boardptr -> board[w][h];
+                        if(clickedTile->isOpen){
+                            //CHORDING
+                            if(boardptr -> ApplyToAdjacent(clickedTile,[](tile* t){int flags=0;flags+=t->isFlagged;return flags;})==clickedTile->minesArround){
+                                boardptr -> ApplyToAdjacent(clickedTile,[](tile* t){
+                                    
+                                    if(t->isFlagged){return 1;}
+                                    t->open();
+                                    return 0;
+                                    
+                                });
+                            }
+                        } else {
+                            if(clickedTile->isFlagged){continue;}
+                            
+                            
+                            clickedTile->open();
+                            
+                        }
                     }
-                } else {
-                    if(clickedTile->isFlagged){continue;}
-
-                    clickedTile->open();
-                    
                 }
             }
+            
+            //right click
+            for (int w = 0; w < boardptr -> width; w++) for (int h = 0; h < boardptr -> height; h++){
+                if(CheckCollisionPointRec(mouse, boardptr -> board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) boardptr -> board[w][h].flag();
             }
         }
-
-        //right click
-        for (int w = 0; w < board.width; w++) for (int h = 0; h < board.height; h++){
-            if(CheckCollisionPointRec(mouse, board.board[w][h].block) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) board.board[w][h].flag();
-    
+    } else {
+        menu.Input(gameStarted);
+        if(gameStarted) {
+            boardptr = new Board(menu.createBoard());
+            boardptr -> gameptr = this;
+            boardptr -> generate(0,0,{});
+        } else if(menu.wchihBoard == 3) {
+            menu.place = 2;
         }
     }
-    
-    //scroll
-    board.scale = max(board.minscale,board.scale+GetMouseWheelMove()*0.1f);
-
-    //movement
-    if(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)){
-        board.screenPos.y-=5/board.scale;  
-    }
-    
-    if(IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)){
-        board.screenPos.y+=5/board.scale;
-    }
-    
-    if(IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)){
-        board.screenPos.x-=5/board.scale;
-    }
-    
-    if(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)){
-        board.screenPos.x+=5/board.scale;
-    }
-    //corrections when going off-screen;
-    int boardWidth = board.width*board.cellSize;
-    int boardHeight = board.height*board.cellSize;
-    board.screenPos.x=max(0.0f,board.screenPos.x);
-    board.screenPos.y=max(0.0f,board.screenPos.y);
-    board.screenPos.x-=max(0.0f,board.screenPos.x+GetScreenWidth()/board.scale-(float)boardWidth);
-    board.screenPos.y-=max(0.0f,board.screenPos.y+GetScreenHeight()/board.scale-(float)boardHeight);
-
 }
 
 void Game::drawAll()
 {
-    board.draw();
+    if(gameStarted) boardptr -> draw();
+    else {menu.BackgroundDraw(); menu.Draw();}
     //ui.draw(🙏);
 }
 
 void Game::print()
 {
-    board.print();    
+    boardptr -> print();    
 }
 
 void Game::updateAll()
 {
-    if(board.isBoardExploded) StopMusicStream(backMusic);
+    if(gameStarted) {boardptr -> update(); if(boardptr -> isBoardExploded) StopMusicStream(allmusicptr->backMusic);}
 }
 

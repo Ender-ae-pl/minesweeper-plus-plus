@@ -1,16 +1,24 @@
+#include "menu.hpp"
 #include "board.hpp"
 #include "ui.hpp"
+#include "AllMusic.hpp"
 
 class Game
 {
+    Menu menu;
+
+    AllMusic* allmusicptr;
     Sound explosion;
-    Board board; 
-    //Ui ui
+    Board* boardptr; 
+    //Ui ui;
+    bool gameStarted;
+
     
     public:
-        Music backMusic;
-        
-        Game();
+        //custom game valables
+        int customWidth, customHeight, customMines;
+
+        Game(AllMusic* allmusicptr=nullptr);
         ~Game();
     
         void explode_board();

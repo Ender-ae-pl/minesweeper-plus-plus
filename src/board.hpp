@@ -18,6 +18,7 @@ class Board {
         Texture2D bomb;
 
         bool isBoardExploded;
+        bool winGame;
         int spaceBetwen=4;
         float minscale=1;
         float scale=1;
@@ -31,10 +32,12 @@ class Board {
 
         Board(int width, int height, int mines);
         void generate(int x, int y, map<string,int> props={});
+        int countOpens();
 
         int ApplyToAdjacent(tile* CenterTile, std::function<int(tile*)> f);
 
         void assign();
         void print();
+        void update();
         void draw();
 };
