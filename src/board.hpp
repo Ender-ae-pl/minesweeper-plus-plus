@@ -19,6 +19,7 @@ class Board {
 
         bool isBoardExploded;
         bool winGame;
+        bool isGenerated;
         int spaceBetwen=4;
         float minscale=1;
         float scale=1;
@@ -30,7 +31,7 @@ class Board {
         int height;
 
 
-        Board(int width, int height, int mines);
+        Board(int width, int height, int mines,Game* gameptr);
         void generate(int x, int y, map<string,int> props={});
         int countOpens();
 

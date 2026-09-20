@@ -97,11 +97,11 @@ void Menu::Input(bool &gameStarted)
 Board Menu::createBoard()
 {
     int with=0, height=0, mines=0;
-    if(wchihBoard == 0) {with = 9; height = 9; mines = 21;}
-    if(wchihBoard == 1) {with = 16; height = 16; mines = 61;}
-    if(wchihBoard == 2) {with = 24; height = 24; mines = 144;}
+    if(wchihBoard == 0) {with = 9; height = 9; mines = 10;}
+    if(wchihBoard == 1) {with = 16; height = 16; mines = 40;}
+    if(wchihBoard == 2) {with = 30; height = 16; mines = 99;}
     if(wchihBoard == 3) {with = gameptr -> customWidth; height = gameptr -> customHeight; mines = gameptr -> customMines;}
-    return {with, height, mines};
+    return {with, height, mines, gameptr};
 }
 
 void Menu::BackgroundDraw()
@@ -119,9 +119,9 @@ void Menu::Draw()
         //Board buttons draw
         char* text; int textSize;
 
-        if(i == 0) {text = "EASY"; textSize = 50;}
-        else if(i == 1) {text = "MEDIUM"; textSize = 45;}
-        else if(i == 2) {text = "HARD"; textSize = 50;}
+        if(i == 0) {text = "BEGGINER"; textSize = 50;}
+        else if(i == 1) {text = "INTERMEDIATE"; textSize = 45;}
+        else if(i == 2) {text = "EXPERT"; textSize = 50;}
         else {text = "CUSTOM"; textSize = 40;}
         boardsChoice[i].Draw(); boardsChoice[i].DrawTextInside(text, textSize); 
     } else if(place == 0) {

@@ -88,6 +88,8 @@ void Game::input()
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                 for (int w = 0; w < boardptr -> width; w++) for (int h = 0; h < boardptr -> height; h++){
                     if(CheckCollisionPointRec(mouse, boardptr -> board[w][h].block)){
+                        if(not boardptr->isGenerated){boardptr->generate(w,h,{});}
+
                         tile* clickedTile = &boardptr -> board[w][h];
                         if(clickedTile->isOpen){
                             //CHORDING
@@ -121,7 +123,7 @@ void Game::input()
         if(gameStarted) {
             boardptr = new Board(menu.createBoard());
             boardptr -> gameptr = this;
-            boardptr -> generate(0,0,{});
+            // boardptr -> generate(0,0,{});
         } else if(menu.wchihBoard == 3) {
             menu.place = 2;
         }

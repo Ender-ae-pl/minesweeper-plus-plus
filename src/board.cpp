@@ -11,12 +11,29 @@
 
 using namespace std;
 
-Board::Board(int width, int height, int mines):width(width),height(height),mines(mines){
+Board::Board(int width, int height, int mines, Game* gameptr):width(width),height(height),mines(mines),gameptr(gameptr){
     screenPos={0,0};
+    isGenerated=false;
     flag = LoadTexture("textures/flag.png");
     bomb = LoadTexture("textures/bomb.png");
     isBoardExploded = false;
     winGame = false;
+
+    //preparing generation
+    board = vector<vector<tile>>(width,vector<tile>(height,tile(0,0)));
+    //update tile position
+    for (int i=0;i<width;i++) for (int j=0;j<height;j++){
+        board[i][j].posx=i;
+        board[i][j].posy=j;
+        board[i][j].boardptr=this;
+        cout<<gameptr<<endl;
+        board[i][j].gameptr=gameptr;
+    }
+
+    //min. scale
+    if ((float)GetScreenWidth()/width*height>=GetScreenHeight()) minscale = (float)GetScreenWidth()/width/cellSize;
+    else minscale = (float)GetScreenHeight()/height/cellSize;
+    scale = minscale;
 }
 
 int Board::ApplyToAdjacent(tile* CenterTile, std::function<int(tile*)> f){
@@ -34,22 +51,15 @@ int Board::ApplyToAdjacent(tile* CenterTile, std::function<int(tile*)> f){
 
 void Board::generate(int x, int y, map<string,int> props){
     Random rng;
-    board = vector<vector<tile>>(width,vector<tile>(height,tile(0,0)));
-    //update tile position
-    for (int i=0;i<width;i++) for (int j=0;j<height;j++){
-        board[i][j].posx=i;
-        board[i][j].posy=j;
-        board[i][j].boardptr=this;
-        board[i][j].gameptr=gameptr;
-    }
 
+    //old generation place (in case something will break)
     
     int rmines = mines;
     if (mines>width*height-9){return;}
     while (rmines>0){
         int rx = rng.RandInt(0,width-1);
         int ry = rng.RandInt(0,height-1);
-        if (board[rx][ry].isMine==false && abs(rx-x)>1 && abs(ry-y)>1){
+        if (board[rx][ry].isMine==false && /*abs(rx-x)>1 && abs(ry-y)>1*/  (rx!=x||ry!=y)){
             board[rx][ry].isMine = true;
             //incrase minesArround counter other blocks
             ApplyToAdjacent(&board[rx][ry], [](tile* t){
@@ -61,12 +71,9 @@ void Board::generate(int x, int y, map<string,int> props){
         }
     }
 
-    //min. scale
-    if ((float)GetScreenWidth()/width*height>=GetScreenHeight()) minscale = (float)GetScreenWidth()/width/cellSize;
-    else minscale = (float)GetScreenHeight()/height/cellSize;
-    scale = minscale;
 
 
+    isGenerated=true;
 }
 
 int Board::countOpens()
