@@ -68,24 +68,40 @@ void Menu::Input(bool &gameStarted)
     } else if(place == 2) {
         //Confirm button hover
         IsHover(&confirmButton);
+        
 
         //Starting game (custom button & enter)
-        if((confirmButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) || (IsTyping == 2 && IsKeyPressed(KEY_ENTER))) && !IsCustomButtonsEmpty()) {
-            gameptr -> customWidth = std::stoi(customChoice[0].text);
-            gameptr -> customHeight = std::stoi(customChoice[1].text);
-            gameptr -> customMines = std::stoi(customChoice[2].text);
-            gameStarted = true;
-            if(gameptr -> customMines > gameptr -> customWidth * gameptr -> customHeight - 9) {gameStarted = false;}
+        if(confirmButton.IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) || IsKeyPressed(KEY_ENTER)) {
+            if(IsCustomButtonsEmpty()) {
+                for(auto& button : customChoice) {button.wrongInput();}
+                IsTyping = -1;
+                gameStarted = false;
+            } else {
+                gameptr -> customWidth = std::stoi(customChoice[0].text);
+                gameptr -> customHeight = std::stoi(customChoice[1].text);
+                gameptr -> customMines = std::stoi(customChoice[2].text);
+
+                if(gameptr -> customMines > gameptr -> customWidth * gameptr -> customHeight - 9) {
+                    for(auto& button : customChoice) {button.wrongInput();}
+                    IsTyping = -1;
+                    gameStarted = false;
+                } else {
+                    gameStarted = true;
+                }
+            }
         }
 
         //Custom board buttons input & hover
         //Tab
-        if((!IsKeyDown(KEY_LEFT_SHIFT) && !IsKeyDown(KEY_RIGHT_SHIFT)) && IsKeyPressed(KEY_TAB)) {if(IsTyping != 2) IsTyping++;}
-        else if((IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) && IsKeyPressed(KEY_TAB)) {if(IsTyping != 0) IsTyping--;}
+        if((!IsKeyDown(KEY_LEFT_SHIFT) && !IsKeyDown(KEY_RIGHT_SHIFT)) && IsKeyPressed(KEY_TAB)) {if(IsTyping < 2) IsTyping++;}
+        else if((IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) && IsKeyPressed(KEY_TAB)) {if(IsTyping > 0) IsTyping--;}
 
         for (int i = 0; i < customChoice.size(); i++)
         {
             IsHover(&customChoice[i]);
+
+            //Unmakeing buttons red after wrong input
+            if(customChoice[i].isWrong && IsTyping >= 0) customChoice[i].UnWrongInput();
 
             //Click
             if(customChoice[i].IsPressd(GetMousePosition(), IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) IsTyping = i;
